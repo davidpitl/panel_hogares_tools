@@ -20,8 +20,6 @@ inputExcel = './doc/00_DiseñoRegistro.xlsx'
 output_folder = './out_unificado/'
 
 
-
-
 def getStartColumn(worksheet, cell_content):
     for current_row in worksheet.iter_rows(min_row=0, max_row=worksheet.max_row):
         # check EmptyRow and EmptyCell
