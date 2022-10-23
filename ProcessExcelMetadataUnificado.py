@@ -16,7 +16,7 @@ irpf_aaee_eobj_file_names = ['9_IRPF2016_AAEE_EOBJ.txt', '9_IRPF2017_AAEE_EOBJ.t
 irpf_aaee_eobja_file_names = ['9_IRPF2016_AAEE_EOBJA.txt', '9_IRPF2017_AAEE_EOBJA.txt', '9_IRPF2018_AAEE_EOBJA.txt', '9_IRPF2019_AAEE_EOBJA.txt']
 
 
-inputExcel = './doc/00_DiseñoRegistro.xlsx'
+inputExcel = './doc/00_DiseñoRegistro_v2.xlsx'
 output_folder = './out_unificado/'
 
 

@@ -2,24 +2,37 @@ import openpyxl as xl
 from openpyxl.cell.read_only import EmptyCell
 
 
-
 iden_file_names  = ['11_IDEN2016.TXT', '11_IDEN2017.TXT', '11_IDEN2018.TXT', '11_IDEN2019.TXT']
 renta_file_names = ['2_Renta2016.txt', '2_Renta2017.txt', '2_Renta2018.txt', '2_Renta2019.txt']
 renta_imputacion_file_names = ['3_RentaImputacion2016.txt', '3_RentaImputacion2017.txt', '3_RentaImputacion2018.txt', '3_RentaImputacion2019.txt']
 irpf_file_names = ['4_IRPF2016.txt', '4_IRPF2017.txt', '4_IRPF2018.txt', '4_IRPF2019.txt']
 patrimonio_file_names = ['5_Patrimonio2016.txt', '5_Patrimonio2017.txt', '5_Patrimonio2018.txt', '5_Patrimonio2019.txt']
 mod714_file_names = ['6_M714_2016.txt', '6_M714_2017.txt', '6_M714_2018.txt', '6_M714_2019.txt']
-mod790_file_names = ['7_M190_2016.txt', '7_M190_2017.txt', '7_M190__2019.txt', '7_M190_2019.txt']
-irpf_rrii_file_names = ['4_IRPF2016_RRII.txt', '4_IRPF2017_RRII.txt', '4_IRPF2018_RRII.txt', '4_IRPF2019_RRII.txt']
+mod190_file_names = ['7_M190_2016.TXT', '7_M190_2017.TXT', '7_M190_2019.TXT', '7_M190_2019.TXT']
+irpf_rrii_file_names = ['8_IRPF2016_RRII.txt', '8_IRPF2017_RRII.txt', '8_IRPF2018_RRII.txt', '8_IRPF2019_RRII.txt']
 irpf_aaee_ed_file_names = ['9_IRPF2016_AAEE_ED.txt', '9_IRPF2017_AAEE_ED.txt', '9_IRPF2018_AAEE_ED.txt', '9_IRPF2019_AAEE_ED.txt']
 irpf_aaee_eobj_file_names = ['9_IRPF2016_AAEE_EOBJ.txt', '9_IRPF2017_AAEE_EOBJ.txt', '9_IRPF2018_AAEE_EOBJ.txt', '9_IRPF2019_AAEE_EOBJ.txt']
 irpf_aaee_eobja_file_names = ['9_IRPF2016_AAEE_EOBJA.txt', '9_IRPF2017_AAEE_EOBJA.txt', '9_IRPF2018_AAEE_EOBJA.txt', '9_IRPF2019_AAEE_EOBJA.txt']
+irpf_g2016_file_names = ['IRPF2016_G1yG2_C5.TXT', 'IRPF2016_G3.TXT', 'IRPF2016_G2_C1.TXT', 'IRPF2016_G4.TXT',
+                         'IRPF2016_G2_C2.TXT', 'IRPF2016_G2_C3.TXT', 'IRPF2016_G2_C5.TXT', 'IRPF2016_G2_C7.TXT',
+                         'IRPF2016_G2_C8.TXT']
+irpf_g2017_file_names = ['IRPF2017_G1_C1.TXT', 'IRPF2017_G2_C1.TXT', 'IRPF2017_G1_C2.TXT', 'IRPF2017_G1_C3.TXT',
+                         'IRPF2017_G2_C3.TXT', 'IRPF2017_G2_C4.TXT', 'IRPF2017_G2_C5.TXT', 'IRPF2017_G2_C6.TXT',
+                         'IRPF2017_G2_C7.TXT', 'IRPF2017_G2_C8.TXT', 'IRPF2017_G3.TXT', 'IRPF2017_G4.TXT']
+irpf_g2018_file_names = ['IRPF2018_G1_C1.TXT', 'IRPF2018_G2_C1.TXT', 'IRPF2018_G1_C3.TXT', 'IRPF2018_G2_C3.TXT',
+                         'IRPF2018_G2_C4.TXT', 'IRPF2018_G2_C5.TXT', 'IRPF2018_G2_C6.TXT', 'IRPF2018_G2_C7.TXT',
+                         'IRPF2018_G2_C8.TXT', 'IRPF2018_G3.TXT', 'IRPF2018_G4.TXT']
+irpf_g2019_file_names = ['IRPF2019_G1_C1.TXT', 'IRPF2019_G3.TXT', 'IRPF2019_G4.TXT', 'IRPF2019_G1_C2.txt',
+                         'IRPF2019_G1_C3.txt', 'IRPF2019_G2_C6.TXT', 'IRPF2019_G2_C7.TXT', 'IRPF2019_G2_C8.TXT',
+                         'IRPF2019_G2_C1.TXT', 'IRPF2019_G2_C2.TXT', 'IRPF2019_G2_C3.TXT', 'IRPF2019_G2_C4.TXT',
+                         'IRPF2019_G2_C5.TXT']
 
 
-inputExcel = './doc/00_DiseñoRegistro.xlsx'
-output_folder = './out/'
+inputExcel = './doc/00_DiseñoRegistro_v2.xlsx'
+output_folder = './out_no_unificado/'
 
-
+#database_name = 'test'
+database_name = 'panel_hogares'
 
 
 def getStartColumn(worksheet, cell_content):
@@ -112,7 +125,7 @@ def writeLoadData(metadata, original_file_name):
     tablename = 'tbl_' + file_name
 
     with open(file_name_def, 'w') as f:
-        f.write('USE test;\n\n')
+        f.write('USE ' + database_name + ';\n\n')
         f.write('LOAD DATA LOCAL INFILE \'' + original_file_name + '\'\n')
         f.write('INTO TABLE ' + tablename + '\n')
         f.write('(@row)\n')
@@ -138,7 +151,7 @@ def writeCreateTable(metadata, original_file_name):
     tablename = 'tbl_' + file_name
 
     with open(file_name_def, 'w') as f:
-        f.write('USE test;\n\n')
+        f.write('USE ' + database_name + ';\n\n')
         f.write('DROP TABLE IF EXISTS ' + tablename + ';\n\n')
         f.write('CREATE TABLE ' + tablename + '(\n')
 
@@ -149,8 +162,8 @@ def writeCreateTable(metadata, original_file_name):
             var_decimales = metadata_item.get('var_decimales')
 
             strLength = ''
-            if var_decimales is not None:
-                strLength = str(var_long) + ','+ str(var_decimales)
+            if var_decimales is not None and var_tipo == 'NUMERIC':
+                strLength = str(var_long) + ',' + str(var_decimales)
             else:
                 strLength = str(var_long)
 
@@ -171,8 +184,8 @@ def getStartColRow(worksheet, file_name):
     if start_row < 0:
         print('ERROR reading header (start_col): ' + file_name)
 
-    # print(' start col:' + str(start_col))
-    # print(' start row:' + str(start_row))
+    print(' start col:' + str(start_col))
+    print(' start row:' + str(start_row))
 
     return start_col, start_row
 
@@ -222,8 +235,8 @@ for worksheet in workbook.worksheets:
                 continue
 
     elif worksheet.title == '7_Mod190':
-        for mod790_file_name in mod790_file_names:
-            if buildScriptFiles(mod790_file_name) < 0:
+        for mod190_file_name in mod190_file_names:
+            if buildScriptFiles(mod190_file_name) < 0:
                 continue
 
     elif worksheet.title == '8_IRPF_RRII':
@@ -244,6 +257,26 @@ for worksheet in workbook.worksheets:
     elif worksheet.title == '9_IRPF_AAEE_EOBJA':
         for irpf_aaee_eobja_file_name in irpf_aaee_eobja_file_names:
             if buildScriptFiles(irpf_aaee_eobja_file_name) < 0:
+                continue
+
+    elif worksheet.title == '10_IRPF_G_2016':
+        for irpf_g2016_file_name in irpf_g2016_file_names:
+            if buildScriptFiles(irpf_g2016_file_name) < 0:
+                continue
+
+    elif worksheet.title == '10_IRPF_G_2017':
+        for irpf_g2017_file_name in irpf_g2017_file_names:
+            if buildScriptFiles(irpf_g2017_file_name) < 0:
+                continue
+
+    elif worksheet.title == '10_IRPF_G_2018':
+        for irpf_g2018_file_name in irpf_g2018_file_names:
+            if buildScriptFiles(irpf_g2018_file_name) < 0:
+                continue
+
+    elif worksheet.title == '10_IRPF_G_2019':
+        for irpf_g2019_file_name in irpf_g2019_file_names:
+            if buildScriptFiles(irpf_g2019_file_name) < 0:
                 continue
 
 
