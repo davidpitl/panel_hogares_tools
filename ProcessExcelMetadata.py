@@ -1,8 +1,10 @@
 import openpyxl as xl
 from openpyxl.cell.read_only import EmptyCell
+import os
+import re
 
 
-iden_file_names  = ['11_IDEN2016.TXT', '11_IDEN2017.TXT', '11_IDEN2018.TXT', '11_IDEN2019.TXT']
+iden_file_names  = ['1_IDEN2016.txt', '1_IDEN2017.txt', '1_IDEN2018.txt', '1_IDEN2019.txt']
 renta_file_names = ['2_Renta2016.txt', '2_Renta2017.txt', '2_Renta2018.txt', '2_Renta2019.txt']
 renta_imputacion_file_names = ['3_RentaImputacion2016.txt', '3_RentaImputacion2017.txt', '3_RentaImputacion2018.txt', '3_RentaImputacion2019.txt']
 irpf_file_names = ['4_IRPF2016.txt', '4_IRPF2017.txt', '4_IRPF2018.txt', '4_IRPF2019.txt']
@@ -28,33 +30,35 @@ irpf_g2019_file_names = ['IRPF2019_G1_C1.TXT', 'IRPF2019_G3.TXT', 'IRPF2019_G4.T
                          'IRPF2019_G2_C5.TXT']
 
 
-inputExcel = './doc/00_DiseñoRegistro_v2.xlsx'
+inputExcel = './doc/00_DiseñoRegistro_v3.xlsx'
 output_folder = './out_no_unificado/'
+data_folder = '/media/david/5394E4122138C590/Panel/'
 
 #database_name = 'test'
 database_name = 'panel_hogares'
 
 
-def getStartColumn(worksheet, cell_content):
+def getStartPoint(worksheet, cell_content):
+    num_row = 0
     for current_row in worksheet.iter_rows(min_row=0, max_row=worksheet.max_row):
-        # check EmptyRow and EmptyCell
         if current_row is not None and len(current_row) > 0:
             num_col = 0
             for cell in current_row:
                 if cell is not None and type(cell) is not EmptyCell:
                     if cell_content in str(cell.value):
-                        return num_col
+                        return num_col, num_row
                 num_col += 1
-    return -1
+        num_row += 1
+    return -1, -1
 
-def getStartRow(worksheet, start_col):
+def getStartRow(worksheet, start_col, start_row):
     num_row = 0
     for current_row in worksheet.iter_rows(min_row=0, max_row=worksheet.max_row):
         # check EmptyRow and EmptyCell
         if current_row is not None and len(current_row) > 0:
             num_col = 0
             for cell in current_row:
-                if num_col >= start_col:
+                if num_col >= start_col and num_row >= start_row:
                     if cell is not None and type(cell) is not EmptyCell:
                         if 'Posición inicial' in str(cell.value):
                             return num_row
@@ -64,8 +68,6 @@ def getStartRow(worksheet, start_col):
 
 
 def processMetadataRow(current_row, start_col):
-    #{'var_name': 'IDENPER', 'var_pos_inicial': 1, 'var_tipo': 'Num', 'var_long': 11, 'var_decimales': None, 'var_desc': 'Identificador único de persona'}
-
     metadataMap = {}
 
     var_name = current_row[start_col+1]
@@ -86,7 +88,7 @@ def processMetadataRow(current_row, start_col):
     var_desc = current_row[start_col + 5]
     metadataMap['var_desc'] = var_desc.value
 
-    if var_tipo.value is None or var_name.value is None or var_tipo.value is None or var_long.value is None:
+    if var_tipo.value is None or var_name.value is None or var_long.value is None:
         return None
 
     return metadataMap
@@ -101,6 +103,8 @@ def processMetadata(worksheet, start_col, start_row):
             metadataRow = processMetadataRow(current_row, start_col)
             if metadataRow is not None:
                 metadata.append(metadataRow)
+            else:
+                break
         num_row += 1
     return metadata
 
@@ -113,8 +117,9 @@ def getType(type_name):
     return 'VARCHAR'
 
 def getCanonicalName(file_name):
-    offset = file_name.find('_') + 1
-    file_name = file_name[offset:]
+    if not file_name.startswith('IRPF20'):
+        offset = file_name.find('_') + 1
+        file_name = file_name[offset:]
     file_name = file_name[:-4]
     return file_name
 
@@ -124,7 +129,14 @@ def writeLoadData(metadata, original_file_name):
     file_name_def = output_folder + 'load_' + file_name + '.sql'
     tablename = 'tbl_' + file_name
 
+    m = re.findall(r'[0-9]{4,7}', original_file_name)
+    annio = str(m[0])
+
+    if original_file_name.startswith('IRPF20'):
+        original_file_name = '10_' + original_file_name
+
     with open(file_name_def, 'w') as f:
+        original_file_name = data_folder + annio + '/' + original_file_name
         f.write('USE ' + database_name + ';\n\n')
         f.write('LOAD DATA LOCAL INFILE \'' + original_file_name + '\'\n')
         f.write('INTO TABLE ' + tablename + '\n')
@@ -177,10 +189,10 @@ def writeCreateTable(metadata, original_file_name):
 
 
 def getStartColRow(worksheet, file_name):
-    start_col = getStartColumn(worksheet, file_name)
+    start_col, start_row = getStartPoint(worksheet, file_name)
     if start_col < 0:
         print('ERROR reading header (start_col): ' + file_name)
-    start_row = getStartRow(worksheet, start_col)
+    start_row = getStartRow(worksheet, start_col, start_row)
     if start_row < 0:
         print('ERROR reading header (start_col): ' + file_name)
 
@@ -280,7 +292,20 @@ for worksheet in workbook.worksheets:
                 continue
 
 
+# write shell scripts
 
+shell_script_create_file_name = output_folder + 'create_tables.sh'
+shell_script_load_file_name = output_folder + 'load_tables.sh'
+
+with open(shell_script_create_file_name, 'w') as f_c, open(shell_script_load_file_name, 'w') as f_l:
+    list_files = os.listdir(output_folder)
+    for file_name in list_files:
+        if file_name.startswith('create') and not file_name.endswith('.sh'):
+            f_c.write('echo "' + file_name + '"\n')
+            f_c.write('sudo mariadb < ' + file_name + '\n')
+        elif file_name.startswith('load'):
+            f_l.write('echo "' + file_name + '"\n')
+            f_l.write('sudo mariadb < ' + file_name + '\n')
 
 
 
