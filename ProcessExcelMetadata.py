@@ -10,24 +10,26 @@ renta_imputacion_file_names = ['3_RentaImputacion2016.txt', '3_RentaImputacion20
 irpf_file_names = ['4_IRPF2016.txt', '4_IRPF2017.txt', '4_IRPF2018.txt', '4_IRPF2019.txt']
 patrimonio_file_names = ['5_Patrimonio2016.txt', '5_Patrimonio2017.txt', '5_Patrimonio2018.txt', '5_Patrimonio2019.txt']
 mod714_file_names = ['6_M714_2016.txt', '6_M714_2017.txt', '6_M714_2018.txt', '6_M714_2019.txt']
-mod190_file_names = ['7_M190_2016.TXT', '7_M190_2017.TXT', '7_M190_2019.TXT', '7_M190_2019.TXT']
+mod190_file_names = ['7_M190_2016.txt', '7_M190_2017.txt', '7_M190_2018.txt', '7_M190_2019.txt']
 irpf_rrii_file_names = ['8_IRPF2016_RRII.txt', '8_IRPF2017_RRII.txt', '8_IRPF2018_RRII.txt', '8_IRPF2019_RRII.txt']
 irpf_aaee_ed_file_names = ['9_IRPF2016_AAEE_ED.txt', '9_IRPF2017_AAEE_ED.txt', '9_IRPF2018_AAEE_ED.txt', '9_IRPF2019_AAEE_ED.txt']
 irpf_aaee_eobj_file_names = ['9_IRPF2016_AAEE_EOBJ.txt', '9_IRPF2017_AAEE_EOBJ.txt', '9_IRPF2018_AAEE_EOBJ.txt', '9_IRPF2019_AAEE_EOBJ.txt']
 irpf_aaee_eobja_file_names = ['9_IRPF2016_AAEE_EOBJA.txt', '9_IRPF2017_AAEE_EOBJA.txt', '9_IRPF2018_AAEE_EOBJA.txt', '9_IRPF2019_AAEE_EOBJA.txt']
-irpf_g2016_file_names = ['IRPF2016_G1yG2_C5.TXT', 'IRPF2016_G3.TXT', 'IRPF2016_G2_C1.TXT', 'IRPF2016_G4.TXT',
-                         'IRPF2016_G2_C2.TXT', 'IRPF2016_G2_C3.TXT', 'IRPF2016_G2_C5.TXT', 'IRPF2016_G2_C7.TXT',
-                         'IRPF2016_G2_C8.TXT']
-irpf_g2017_file_names = ['IRPF2017_G1_C1.TXT', 'IRPF2017_G2_C1.TXT', 'IRPF2017_G1_C2.TXT', 'IRPF2017_G1_C3.TXT',
-                         'IRPF2017_G2_C3.TXT', 'IRPF2017_G2_C4.TXT', 'IRPF2017_G2_C5.TXT', 'IRPF2017_G2_C6.TXT',
-                         'IRPF2017_G2_C7.TXT', 'IRPF2017_G2_C8.TXT', 'IRPF2017_G3.TXT', 'IRPF2017_G4.TXT']
-irpf_g2018_file_names = ['IRPF2018_G1_C1.TXT', 'IRPF2018_G2_C1.TXT', 'IRPF2018_G1_C3.TXT', 'IRPF2018_G2_C3.TXT',
-                         'IRPF2018_G2_C4.TXT', 'IRPF2018_G2_C5.TXT', 'IRPF2018_G2_C6.TXT', 'IRPF2018_G2_C7.TXT',
-                         'IRPF2018_G2_C8.TXT', 'IRPF2018_G3.TXT', 'IRPF2018_G4.TXT']
-irpf_g2019_file_names = ['IRPF2019_G1_C1.TXT', 'IRPF2019_G3.TXT', 'IRPF2019_G4.TXT', 'IRPF2019_G1_C2.txt',
-                         'IRPF2019_G1_C3.txt', 'IRPF2019_G2_C6.TXT', 'IRPF2019_G2_C7.TXT', 'IRPF2019_G2_C8.TXT',
-                         'IRPF2019_G2_C1.TXT', 'IRPF2019_G2_C2.TXT', 'IRPF2019_G2_C3.TXT', 'IRPF2019_G2_C4.TXT',
-                         'IRPF2019_G2_C5.TXT']
+irpf_g2016_file_names = ['IRPF2016_G1yG2_C5.txt', 'IRPF2016_G3.txt', 'IRPF2016_G2_C1.txt', 'IRPF2016_G4.txt',
+                         'IRPF2016_G2_C2.txt', 'IRPF2016_G2_C3.txt', 'IRPF2016_G2_C5.txt', 'IRPF2016_G2_C7.txt',
+                         'IRPF2016_G2_C8.txt']
+irpf_g2017_file_names = ['IRPF2017_G1_C1.txt', 'IRPF2017_G2_C1.txt', 'IRPF2017_G1_C2.txt', 'IRPF2017_G1_C3.txt',
+                         'IRPF2017_G2_C3.txt', 'IRPF2017_G2_C4.txt', 'IRPF2017_G2_C5.txt', 'IRPF2017_G2_C6.txt',
+                         'IRPF2017_G2_C7.txt', 'IRPF2017_G2_C8.txt', 'IRPF2017_G3.txt', 'IRPF2017_G4.txt',
+                         'IRPF2017_G2_C4.txt']
+irpf_g2018_file_names = ['IRPF2018_G1_C1.txt', 'IRPF2018_G2_C1.txt', 'IRPF2018_G2_C4.txt', 'IRPF2018_G2_C6.txt',
+                          'IRPF2018_G2_C2.txt', 'IRPF2018_G2_C7.txt', 'IRPF2018_G1_C2.txt', 'IRPF2018_G2_C5.txt',
+                          'IRPF2018_G2_C8.txt', 'IRPF2018_G1_C3.txt', 'IRPF2018_G2_C3.txt', 'IRPF2018_G3.txt',
+                         'IRPF2018_G4.txt']
+irpf_g2019_file_names = ['IRPF2019_G1_C1.txt', 'IRPF2019_G3.txt', 'IRPF2019_G4.txt', 'IRPF2019_G1_C2.txt',
+                         'IRPF2019_G1_C3.txt', 'IRPF2019_G2_C6.txt', 'IRPF2019_G2_C7.txt', 'IRPF2019_G2_C8.txt',
+                         'IRPF2019_G2_C1.txt', 'IRPF2019_G2_C2.txt', 'IRPF2019_G2_C3.txt', 'IRPF2019_G2_C4.txt',
+                         'IRPF2019_G2_C5.txt']
 
 
 inputExcel = './doc/00_DiseñoRegistro_v3.xlsx'
@@ -35,7 +37,7 @@ output_folder = './out_no_unificado/'
 data_folder = '/media/david/5394E4122138C590/Panel/'
 
 #database_name = 'test'
-database_name = 'panel_hogares'
+database_name = 'panel_hogares2'
 
 
 def getStartPoint(worksheet, cell_content):
@@ -113,8 +115,8 @@ def getType(type_name):
     if type_name == 'Num':
         return 'NUMERIC'
     elif type_name == 'Char':
-        return 'VARCHAR'
-    return 'VARCHAR'
+        return 'CHAR'
+    return 'CHAR'
 
 def getCanonicalName(file_name):
     if not file_name.startswith('IRPF20'):
@@ -123,6 +125,22 @@ def getCanonicalName(file_name):
     file_name = file_name[:-4]
     return file_name
 
+def writeLoadDataSimple(metadata, original_file_name):
+    file_name = getCanonicalName(original_file_name)
+    file_name_def = output_folder + 'load_' + file_name + '.sql'
+    tablename = 'tbl_' + file_name
+
+    m = re.findall(r'[0-9]{4,7}', original_file_name)
+    annio = str(m[0])
+
+    if original_file_name.startswith('IRPF20'):
+        original_file_name = '10_' + original_file_name
+
+    with open(file_name_def, 'w') as f:
+        original_file_name = data_folder + annio + '/' + original_file_name
+        f.write('USE ' + database_name + ';\n\n')
+        f.write('LOAD DATA LOCAL INFILE \'' + original_file_name + '\'\n')
+        f.write('INTO TABLE ' + tablename + ' FIELDS TERMINATED BY \'\';\n')
 
 def writeLoadData(metadata, original_file_name):
     file_name = getCanonicalName(original_file_name)
@@ -208,7 +226,8 @@ def buildScriptFiles(file_name):
         return -1
     metadata = processMetadata(worksheet, start_col, start_row)
     writeCreateTable(metadata, file_name)
-    writeLoadData(metadata, file_name)
+    #writeLoadData(metadata, file_name)
+    writeLoadDataSimple(metadata, file_name)
     return 0
 
 # process worksheets
