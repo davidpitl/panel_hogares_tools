@@ -6,17 +6,10 @@ from openpyxl.cell.read_only import EmptyCell
 iden_file_names  = ['1_IDEN2016.txt', '1_IDEN2017.txt', '1_IDEN2018.txt', '1_IDEN2019.txt']
 renta_file_names = ['2_Renta2016.txt', '2_Renta2017.txt', '2_Renta2018.txt', '2_Renta2019.txt']
 renta_imputacion_file_names = ['3_RentaImputacion2016.txt', '3_RentaImputacion2017.txt', '3_RentaImputacion2018.txt', '3_RentaImputacion2019.txt']
-irpf_file_names = ['4_IRPF2016.txt', '4_IRPF2017.txt', '4_IRPF2018.txt', '4_IRPF2019.txt']
 patrimonio_file_names = ['5_Patrimonio2016.txt', '5_Patrimonio2017.txt', '5_Patrimonio2018.txt', '5_Patrimonio2019.txt']
-mod714_file_names = ['6_M714_2016.txt', '6_M714_2017.txt', '6_M714_2018.txt', '6_M714_2019.txt']
 mod190_file_names = ['7_M190_2016.txt', '7_M190_2017.txt', '7_M190_2018.txt', '7_M190_2019.txt']
-irpf_rrii_file_names = ['8_IRPF2016_RRII.txt', '8_IRPF2017_RRII.txt', '8_IRPF2018_RRII.txt', '8_IRPF2019_RRII.txt']
-irpf_aaee_ed_file_names = ['9_IRPF2016_AAEE_ED.txt', '9_IRPF2017_AAEE_ED.txt', '9_IRPF2018_AAEE_ED.txt', '9_IRPF2019_AAEE_ED.txt']
-irpf_aaee_eobj_file_names = ['9_IRPF2016_AAEE_EOBJ.txt', '9_IRPF2017_AAEE_EOBJ.txt', '9_IRPF2018_AAEE_EOBJ.txt', '9_IRPF2019_AAEE_EOBJ.txt']
-irpf_aaee_eobja_file_names = ['9_IRPF2016_AAEE_EOBJA.txt', '9_IRPF2017_AAEE_EOBJA.txt', '9_IRPF2018_AAEE_EOBJA.txt', '9_IRPF2019_AAEE_EOBJA.txt']
 
-
-inputExcel = './doc/00_DiseñoRegistro_v2.xlsx'
+inputExcel = './doc/00_DiseñoRegistro_v3.xlsx'
 output_folder = './out_unificado/'
 
 
@@ -96,8 +89,8 @@ def getType(type_name):
     if type_name == 'Num':
         return 'NUMERIC'
     elif type_name == 'Char':
-        return 'VARCHAR'
-    return 'VARCHAR'
+        return 'CHAR'
+    return 'CHAR'
 
 def getCanonicalName(file_name):
     offset = file_name.find('_') + 1
@@ -107,8 +100,26 @@ def getCanonicalName(file_name):
 
 
 def writeLoadData(metadata, original_file_name, annio):
-    file_name = getCanonicalName(original_file_name)
-    file_name_def = output_folder + str(annio) + '/load_' + file_name + '.sql'
+    # file_name = getCanonicalName(original_file_name)
+    # file_name_def = output_folder + 'load_' + file_name + '.sql'
+    # tablename = 'tbl_' + file_name
+    #
+    # m = re.findall(r'[0-9]{4,7}', original_file_name)
+    # annio = str(m[0])
+    #
+    # if original_file_name.startswith('IRPF20'):
+    #     original_file_name = '10_' + original_file_name
+    #
+    # with open(file_name_def, 'w') as f:
+    #     original_file_name = data_folder + annio + '/' + original_file_name
+    #     f.write('USE ' + database_name + ';\n\n')
+    #     f.write('LOAD DATA LOCAL INFILE \'' + original_file_name + '\'\n')
+    #     f.write('INTO TABLE ' + tablename + ' FIELDS TERMINATED BY \'\';\n')
+
+
+
+    #file_name = getCanonicalName(original_file_name)
+    file_name_def = output_folder + str(annio) + '/load_' + original_file_name + '.sql'
     tablename = 'tbl_' + file_name
 
     with open(file_name_def, 'w') as f:
@@ -133,8 +144,8 @@ def writeLoadData(metadata, original_file_name, annio):
 
 
 def writeCreateTable(metadata, original_file_name, annio):
-    file_name = getCanonicalName(original_file_name)
-    file_name_def = output_folder + str(annio) + '/create_table_' + file_name + '.sql'
+    #file_name = getCanonicalName(original_file_name)
+    file_name_def = output_folder + str(annio) + '/create_table_' + original_file_name + '.sql'
     tablename = 'tbl_' + file_name
 
     with open(file_name_def, 'w') as f:
@@ -171,8 +182,8 @@ def getStartColRow(worksheet, file_name):
     if start_row < 0:
         print('ERROR reading header (start_col): ' + file_name)
 
-    # print(' start col:' + str(start_col))
-    # print(' start row:' + str(start_row))
+    print(' start col:' + str(start_col))
+    print(' start row:' + str(start_row))
 
     return start_col, start_row
 
@@ -208,30 +219,12 @@ def getTableNameAndPrefix(title, num_annio):
     elif worksheet.title == '3_RentaImputación':
         file_name = renta_imputacion_file_names[num_annio]
         prefix = 'RENTA_IMPUT'
-    elif worksheet.title == '4_IRPF':
-        file_name = irpf_file_names[num_annio]
-        prefix = 'IRPF'
     elif worksheet.title == '5_Patrimonio':
         file_name = patrimonio_file_names[num_annio]
         prefix = 'PATRIM'
-    elif worksheet.title == '6_Mod714':
-        file_name = mod714_file_names[num_annio]
-        prefix = 'M714'
     elif worksheet.title == '7_Mod190':
         file_name = mod190_file_names[num_annio]
         prefix = 'M190'
-    elif worksheet.title == '8_IRPF_RRII':
-        file_name = irpf_rrii_file_names[num_annio]
-        prefix = 'IRPF_RRII'
-    elif worksheet.title == '9_IRPF_AAEE_ED':
-        file_name = irpf_aaee_ed_file_names[num_annio]
-        prefix = 'IRPF_AAEE_ED'
-    elif worksheet.title == '9_IRPF_AAEE_EOBJ':
-        file_name = irpf_aaee_eobj_file_names[num_annio]
-        prefix = 'IRPF_AAEE_EOBJ'
-    elif worksheet.title == '9_IRPF_AAEE_EOBJA':
-        file_name = irpf_aaee_eobja_file_names[num_annio]
-        prefix = 'IRPF_AAEE_EOBJA'
     return file_name, prefix
 
 
@@ -241,8 +234,8 @@ def getTableNameAndPrefix(title, num_annio):
 workbook = xl.load_workbook(inputExcel, keep_links=False, read_only=True, data_only=True)
 
 metadata = []
-#annios = [2016, 2017, 2018, 2019]
-annios = [2016]
+annios = [2016, 2017, 2018, 2019]
+#annios = [2016]
 global_offset = 0
 processed_file_names = []
 
