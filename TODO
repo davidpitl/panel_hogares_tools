@@ -1,0 +1,13 @@
+1. Paste + Load
+Falta acabar el Load
+
+2. Crear SELECT UNION ALL para la carga del cubo unificado
+
+3. Generar schemas de Mondrian para los años separados (generados por ProcessExcelMetadata.py)
+
+4. Generar schemas de Mondrian para los años separados pasteados (generados por ProcessExcelMetadataUnificado.py)
+
+5. Generar schemas de Mondrian para los años unificado (generado por ProcessExcelMetadataUnificado.py)
+
+6. Generar cargador de tablas auxiliares (ojo unificación para todos los años y carga indepediente para cada año.
+Se puede empezar por la primera) e intriducción de su definición en los schemas.
