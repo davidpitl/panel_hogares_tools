@@ -198,19 +198,19 @@ def updateOffset(metadata, global_offset):
 def getTableNameAndPrefix(title, num_annio):
     file_name = ''
     prefix = ''
-    if worksheet.title == '1_IDEN':
+    if title == '1_IDEN':
         file_name = iden_file_names[num_annio]
         prefix = 'IDEN'
-    elif worksheet.title == '2_Renta':
+    elif title == '2_Renta':
         file_name = renta_file_names[num_annio]
         prefix = 'RENTA'
-    elif worksheet.title == '3_RentaImputación':
+    elif title == '3_RentaImputación':
         file_name = renta_imputacion_file_names[num_annio]
         prefix = 'RENTA_IMPUT'
-    elif worksheet.title == '5_Patrimonio':
+    elif title == '5_Patrimonio':
         file_name = patrimonio_file_names[num_annio]
         prefix = 'PATRIM'
-    elif worksheet.title == '7_Mod190':
+    elif title == '7_Mod190':
         file_name = mod190_file_names[num_annio]
         prefix = 'M190'
     return file_name, prefix
@@ -239,7 +239,69 @@ def writePasteCmd(processed_file_names, annio):
         f.write(' > ' + str(annio) + '_unificado.txt')
 
 
+def getVariableNamesUnificado(global_metadata):
+    unique_variable_names = set()
+    variable_names = set()
 
+    total_num_vars = 0
+    for current_global_metadata_item in global_metadata:
+        current_metadata = global_metadata[current_global_metadata_item]
+        total_num_vars += len(current_metadata)
+        for metadata_item in current_metadata:
+            var_name = metadata_item.get('var_name')
+            var_desc = metadata_item.get('var_desc')
+            variable_unique_name = var_name + '__' + var_desc
+            unique_variable_names.add(variable_unique_name)
+    print('total_num_vars: ' + str(total_num_vars))
+
+    unique_num_vars = 0
+    for variable_unique_name in unique_variable_names:
+        variable_name = variable_unique_name.split('__')[0]
+        variable_names.add(variable_name)
+
+    unique_num_vars = len(variable_names)
+    print('unique_num_vars: ' + str(unique_num_vars))
+
+    return variable_names
+
+def getLongDecimals(metadata, metadata_item_query):
+    for metadata_item in metadata:
+        if metadata_item.get('var_name') ==  metadata_item_query.get('var_name'):
+            return metadata_item.get('var_long'), metadata_item.get('var_decimales')
+    return None, None
+
+def writeCreateTableUnificado(common_variable_names):
+    commomn_vars_metadata = []
+    for annio in annios:
+        for worksheet in workbook.worksheets:
+            num_annio = annio - 2016
+
+            print('Sheet: ' + worksheet.title)
+            file_name, prefix = getTableNameAndPrefix(worksheet.title, num_annio)
+            if len(file_name) == 0:
+                continue
+
+            table_metadata = getMetadata(file_name, worksheet, prefix)
+            if table_metadata is None:
+                continue
+
+            for metadata_item in table_metadata:
+                var_name = metadata_item.get('var_name')
+                if var_name in common_variable_names:
+                    var_long, var_decimales = getLongDecimals(metadata, metadata_item)
+                    if var_long is None:
+
+                        print()
+
+
+            print('')
+
+
+
+
+global_metadata = {}
+
+# genera tablas anuales unificadas
 for annio in annios:
     for worksheet in workbook.worksheets:
         num_annio = annio - 2016
@@ -255,6 +317,9 @@ for annio in annios:
         table_metadata = updateOffset(table_metadata, global_offset)
         metadata.extend(table_metadata)
 
+        annio_tablename = str(annio) + '_' + str(file_name)
+        global_metadata[annio_tablename] = table_metadata
+
         reg_size = getRegSize(table_metadata)
         global_offset += reg_size
 
@@ -265,7 +330,10 @@ for annio in annios:
     writeLoadData(metadata, file_name, annio)
     writePasteCmd(processed_file_names, annio)
 
-
+# genera tabla unificada para todos los años
+common_variable_names = getVariableNamesUnificado(global_metadata)
+writeCreateTableUnificado(common_variable_names)
+#writeLoadUnificado(common_variable_names)
 
 
 

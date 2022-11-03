@@ -1,5 +1,4 @@
-1. Paste + Load (ProcessExcelMetadataUnificado.py )
-Falta acabar el Load
+//1. Paste + Load (ProcessExcelMetadataUnificado.py ) Falta acabar el Load
 
 2. Crear SELECT UNION ALL para la carga del cubo unificado
 
@@ -11,3 +10,7 @@ Falta acabar el Load
 
 6. Generar cargador de tablas auxiliares (ojo unificación para todos los años y carga indepediente para cada año.
 Se puede empezar por la primera) e intriducción de su definición en los schemas.
+
+7. Incluir IDEN general (unificado y no unificado)
+
+8. Util funciones comunes
