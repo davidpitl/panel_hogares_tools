@@ -252,7 +252,7 @@ def writePasteCmd(processed_file_names, annio):
         f.write(' > ' + str(annio) + '_unificado.txt')
 
 
-
+var_comunes={}
 for annio in annios:
     for worksheet in workbook.worksheets:
         num_annio = annio - 2016
@@ -278,8 +278,35 @@ for annio in annios:
     writeLoadData(metadata, file_name, annio)
     writePasteCmd(processed_file_names, annio)
 
+# Contabiliza apariciones de cada variable
+for var in metadata:
+        key=(var['var_name'],var['var_desc'])
+        if key in var_comunes:
+           var_comunes[key]['contador']+=1
+        else:
+            var_comunes[key]=var
+            var_comunes[key]['contador']=1
 
+# Imprime las que no son comunes a los n años
+print("VARIABLES QUE NO APARECEN LOS N AÑOS:")
+for key in var_comunes:
+    if var_comunes[key]['contador']!=len(annios):
+        print(key,var_comunes[key]['contador'])
+print("\n\n")
 
+# Genera consulta SQL para consolidar en una unica tabla los campos comunes a las anuales.
+fields=[]
+for key in var_comunes:
+    if var_comunes[key]['contador']==len(annios):
+        fields.append(var_comunes[key]['var_name'])
+
+fields=",".join(sorted(fields))
+tablas=["XXX","YYY","ZZZ","WWW"]
+tablas=" UNION ALL ".join([f"SELECT * FROM {t}" for t in tablas ])
+sql=f"CREATE TABLE global_hogares AS SELECT {fields} FROM ({tablas})"
+
+with open("out_unificado/create_global_hogares.sql", 'w') as f:
+     f.write(sql+"\n")
 
 
 

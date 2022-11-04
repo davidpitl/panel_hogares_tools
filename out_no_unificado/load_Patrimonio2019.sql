@@ -1,0 +1,4 @@
+USE panel_hogares2;
+
+LOAD DATA LOCAL INFILE '/media/david/5394E4122138C590/Panel/2019/5_Patrimonio2019.txt'
+INTO TABLE tbl_Patrimonio2019 FIELDS TERMINATED BY '';

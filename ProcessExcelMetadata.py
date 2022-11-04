@@ -179,6 +179,7 @@ def writeCreateTable(metadata, original_file_name):
     file_name = getCanonicalName(original_file_name)
     file_name_def = output_folder + 'create_table_' + file_name + '.sql'
     tablename = 'tbl_' + file_name
+    print(f"******** {tablename} *******************")
 
     with open(file_name_def, 'w') as f:
         f.write('USE ' + database_name + ';\n\n')
