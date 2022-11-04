@@ -305,7 +305,7 @@ tablas=[f"tbl_{a}_hogares" for a in annios]
 tablas=" UNION ALL ".join([f"SELECT * FROM {t}" for t in tablas ])
 sql=f"CREATE TABLE tbl_unificado_hogares AS SELECT {fields} FROM ({tablas});"
 
-# Escribe SQL a fichero
+# Escribe SQL UNION ALL a fichero
 with open("out_unificado/create_global_hogares.sql", 'w') as f:
      f.write(sql+"\n")
 
