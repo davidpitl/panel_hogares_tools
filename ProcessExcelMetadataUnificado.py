@@ -301,12 +301,14 @@ for key in var_comunes:
         fields.append(var_comunes[key]['var_name'])
 
 fields=",".join(sorted(fields))
-tablas=["XXX","YYY","ZZZ","WWW"]
+tablas=[f"tbl_{a}_hogares" for a in annios]
 tablas=" UNION ALL ".join([f"SELECT * FROM {t}" for t in tablas ])
-sql=f"CREATE TABLE global_hogares AS SELECT {fields} FROM ({tablas})"
+sql=f"CREATE TABLE tbl_unificado_hogares AS SELECT {fields} FROM ({tablas});"
 
+# Escribe SQL a fichero
 with open("out_unificado/create_global_hogares.sql", 'w') as f:
      f.write(sql+"\n")
+
 
 
 
