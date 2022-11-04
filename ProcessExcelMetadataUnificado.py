@@ -278,14 +278,18 @@ for annio in annios:
     writeLoadData(metadata, file_name, annio)
     writePasteCmd(processed_file_names, annio)
 
+# ==========================================================
+#    Generar tabla Unificada (select union de las anuales)
+# ==========================================================
+
 # Contabiliza apariciones de cada variable
 for var in metadata:
-        key=(var['var_name'],var['var_desc'])
-        if key in var_comunes:
-           var_comunes[key]['contador']+=1
-        else:
-            var_comunes[key]=var
-            var_comunes[key]['contador']=1
+    key=(var['var_name'],var['var_desc'])
+    if key in var_comunes:
+        var_comunes[key]['contador']+=1
+    else:
+        var_comunes[key]=var
+        var_comunes[key]['contador']=1
 
 # Imprime las que no son comunes a los n años
 print("VARIABLES QUE NO APARECEN LOS N AÑOS:")
@@ -310,9 +314,55 @@ with open("out_unificado/create_global_hogares.sql", 'w') as f:
      f.write(sql+"\n")
 
 
+# ==========================================================
+#                Generar Esquema de Mondrian)
+# ==========================================================
+colores={'M190':'#4469a6','PATRIM':'#0b4d90','RENTA':'#3399ff'}
 
+measures=[]
+dimensiones=[]
+head="""
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<Schema name="hogares" measuresCaption="Variables de explotaci&#243;n">
+<Cube name="anuarioTotal" visible="true" cache="true" enabled="true" caption="Anuario estad&#237;stico">
+"""
 
+foot="""\n\n	</Cube>
+</Schema>"""
 
+for var in metadata:
+    key=(var['var_name'],var['var_desc'])
+    if var_comunes[key]['contador']!=len(annios): continue
+
+    v=var_comunes[key]
+    tabla=v['var_name'].split("_")[0]
+
+    if tabla=='IDEN':
+        #print("EXCLUIDO:"+tabla)
+        dimension=f'''
+		<Dimension name="{tabla}" caption="{tabla}" description="{tabla}">
+		  <Hierarchy hasAll="false" allMemberName="total">
+			<Level caption="{tabla}" name="{v['var_name']}" column="{v['var_name']}" uniqueMembers="true"  captionColumn="columnName_es">
+			</Level>
+		  </Hierarchy>
+		</Dimension>
+        '''
+        dimensiones.append(dimension)
+
+    else:
+        measure=f'''
+        <Measure name="{v['var_name']}"  column="{v['var_name']}"  formatString="#,###;-#,###;0" aggregator="sum" caption="{var['var_name']}" description="{var['var_desc']}">
+                <CalculatedMemberProperty name="DISPLAY_FOLDER" value ="{tabla}|color:{colores[tabla]}"/>
+        </Measure>
+        '''
+        measures.append(measure)
+        
+esquema=head+"\n"+"\n".join(dimensiones)+"\n".join(measures)+foot
+print(esquema)
+print(dimension)
+# Escribe SQL UNION ALL a fichero
+with open("out_unificado/hogares.xml", 'w') as f:
+     f.write(esquema+"\n")
 
 
 
