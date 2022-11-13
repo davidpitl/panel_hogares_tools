@@ -1,6 +1,7 @@
 //1. Paste + Load (ProcessExcelMetadataUnificado.py ) Falta acabar el Load
 
 2. Crear SELECT UNION ALL para la carga del cubo unificado
+=> HECHO (Ricardo & Felix)
 
 3. Generar schemas de Mondrian para los años separados (generados por ProcessExcelMetadata.py)
 
