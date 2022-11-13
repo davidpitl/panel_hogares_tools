@@ -1,4 +1,0 @@
-USE panel_hogares2;
-
-LOAD DATA LOCAL INFILE '/media/david/5394E4122138C590/Panel/2016/5_Patrimonio2016.txt'
-INTO TABLE tbl_Patrimonio2016 FIELDS TERMINATED BY '';
