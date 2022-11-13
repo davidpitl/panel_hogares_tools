@@ -2,6 +2,7 @@ import openpyxl as xl
 from openpyxl.cell.read_only import EmptyCell
 import os
 import re
+import util
 
 
 iden_file_names  = ['1_IDEN2016.txt', '1_IDEN2017.txt', '1_IDEN2018.txt', '1_IDEN2019.txt']
@@ -40,93 +41,9 @@ data_folder = '/media/david/5394E4122138C590/Panel/'
 database_name = 'panel_hogares2'
 
 
-def getStartPoint(worksheet, cell_content):
-    num_row = 0
-    for current_row in worksheet.iter_rows(min_row=0, max_row=worksheet.max_row):
-        if current_row is not None and len(current_row) > 0:
-            num_col = 0
-            for cell in current_row:
-                if cell is not None and type(cell) is not EmptyCell:
-                    if cell_content in str(cell.value):
-                        return num_col, num_row
-                num_col += 1
-        num_row += 1
-    return -1, -1
-
-def getStartRow(worksheet, start_col, start_row):
-    num_row = 0
-    for current_row in worksheet.iter_rows(min_row=0, max_row=worksheet.max_row):
-        # check EmptyRow and EmptyCell
-        if current_row is not None and len(current_row) > 0:
-            num_col = 0
-            for cell in current_row:
-                if num_col >= start_col and num_row >= start_row:
-                    if cell is not None and type(cell) is not EmptyCell:
-                        if 'Posición inicial' in str(cell.value):
-                            return num_row
-                num_col += 1
-        num_row += 1
-    return -1
-
-
-def processMetadataRow(current_row, start_col):
-    metadataMap = {}
-
-    var_name = current_row[start_col+1]
-    metadataMap['var_name'] = var_name.value
-
-    var_pos_inicial = current_row[start_col]
-    metadataMap['var_pos_inicial'] = var_pos_inicial.value
-
-    var_tipo = current_row[start_col + 2]
-    metadataMap['var_tipo'] = var_tipo.value
-
-    var_long = current_row[start_col + 3]
-    metadataMap['var_long'] = var_long.value
-
-    var_decimales = current_row[start_col + 4]
-    metadataMap['var_decimales'] = var_decimales.value
-
-    var_desc = current_row[start_col + 5]
-    metadataMap['var_desc'] = var_desc.value
-
-    if var_tipo.value is None or var_name.value is None or var_long.value is None:
-        return None
-
-    return metadataMap
-
-
-def processMetadata(worksheet, start_col, start_row):
-    metadata = []
-    num_row = 0
-    for current_row in worksheet.iter_rows(min_row=0, max_row=worksheet.max_row):
-        cell = current_row[start_col]
-        if cell is not None and type(cell) is not EmptyCell and len(str(cell.value)) > 0 and num_row > start_row:
-            metadataRow = processMetadataRow(current_row, start_col)
-            if metadataRow is not None:
-                metadata.append(metadataRow)
-            else:
-                break
-        num_row += 1
-    return metadata
-
-
-def getType(type_name):
-    if type_name == 'Num':
-        return 'NUMERIC'
-    elif type_name == 'Char':
-        return 'CHAR'
-    return 'CHAR'
-
-def getCanonicalName(file_name):
-    if not file_name.startswith('IRPF20'):
-        offset = file_name.find('_') + 1
-        file_name = file_name[offset:]
-    file_name = file_name[:-4]
-    return file_name
 
 def writeLoadDataSimple(metadata, original_file_name):
-    file_name = getCanonicalName(original_file_name)
+    file_name = util.getCanonicalName(original_file_name)
     file_name_def = output_folder + 'load_' + file_name + '.sql'
     tablename = 'tbl_' + file_name
 
@@ -143,7 +60,7 @@ def writeLoadDataSimple(metadata, original_file_name):
         f.write('INTO TABLE ' + tablename + ' FIELDS TERMINATED BY \'\';\n')
 
 def writeLoadData(metadata, original_file_name):
-    file_name = getCanonicalName(original_file_name)
+    file_name = util.getCanonicalName(original_file_name)
     file_name_def = output_folder + 'load_' + file_name + '.sql'
     tablename = 'tbl_' + file_name
 
@@ -176,7 +93,7 @@ def writeLoadData(metadata, original_file_name):
 
 
 def writeCreateTable(metadata, original_file_name):
-    file_name = getCanonicalName(original_file_name)
+    file_name = util.getCanonicalName(original_file_name)
     file_name_def = output_folder + 'create_table_' + file_name + '.sql'
     tablename = 'tbl_' + file_name
 
@@ -187,7 +104,7 @@ def writeCreateTable(metadata, original_file_name):
 
         for metadata_item in metadata:
             var_name = metadata_item.get('var_name')
-            var_tipo = getType(metadata_item.get('var_tipo'))
+            var_tipo = util.getType(metadata_item.get('var_tipo'))
             var_long = metadata_item.get('var_long')
             var_decimales = metadata_item.get('var_decimales')
 
@@ -207,10 +124,10 @@ def writeCreateTable(metadata, original_file_name):
 
 
 def getStartColRow(worksheet, file_name):
-    start_col, start_row = getStartPoint(worksheet, file_name)
+    start_col, start_row = util.getStartPoint(worksheet, file_name)
     if start_col < 0:
         print('ERROR reading header (start_col): ' + file_name)
-    start_row = getStartRow(worksheet, start_col, start_row)
+    start_row = util.getStartRow(worksheet, start_col, start_row)
     if start_row < 0:
         print('ERROR reading header (start_col): ' + file_name)
 
@@ -224,9 +141,8 @@ def buildScriptFiles(file_name):
     start_col, start_row = getStartColRow(worksheet, file_name)
     if start_col < 0 or start_row < 0:
         return -1
-    metadata = processMetadata(worksheet, start_col, start_row)
+    metadata = util.processMetadata(worksheet, start_col, start_row)
     writeCreateTable(metadata, file_name)
-    #writeLoadData(metadata, file_name)
     writeLoadDataSimple(metadata, file_name)
     return 0
 
