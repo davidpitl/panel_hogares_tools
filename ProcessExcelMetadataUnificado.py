@@ -1,6 +1,6 @@
 import openpyxl as xl
 from openpyxl.cell.read_only import EmptyCell
-
+import util
 
 
 iden_file_names  = ['1_IDEN2016.txt', '1_IDEN2017.txt', '1_IDEN2018.txt', '1_IDEN2019.txt']
@@ -13,112 +13,8 @@ inputExcel = './doc/00_DiseñoRegistro_v3.xlsx'
 output_folder = './out_unificado/'
 
 
-def getStartColumn(worksheet, cell_content):
-    for current_row in worksheet.iter_rows(min_row=0, max_row=worksheet.max_row):
-        # check EmptyRow and EmptyCell
-        if current_row is not None and len(current_row) > 0:
-            num_col = 0
-            for cell in current_row:
-                if cell is not None and type(cell) is not EmptyCell:
-                    if cell_content in str(cell.value):
-                        return num_col
-                num_col += 1
-    return -1
-
-def getStartRow(worksheet, start_col):
-    num_row = 0
-    for current_row in worksheet.iter_rows(min_row=0, max_row=worksheet.max_row):
-        # check EmptyRow and EmptyCell
-        if current_row is not None and len(current_row) > 0:
-            num_col = 0
-            for cell in current_row:
-                if num_col >= start_col:
-                    if cell is not None and type(cell) is not EmptyCell:
-                        if 'Posición inicial' in str(cell.value):
-                            return num_row
-                num_col += 1
-        num_row += 1
-    return -1
-
-
-def processMetadataRow(current_row, start_col, prefix):
-    #{'var_name': 'IDENPER', 'var_pos_inicial': 1, 'var_tipo': 'Num', 'var_long': 11, 'var_decimales': None, 'var_desc': 'Identificador único de persona'}
-
-    metadataMap = {}
-
-    var_name = current_row[start_col + 1]
-    metadataMap['var_name'] = var_name.value
-
-    var_pos_inicial = current_row[start_col]
-    metadataMap['var_pos_inicial'] = var_pos_inicial.value
-
-    var_tipo = current_row[start_col + 2]
-    metadataMap['var_tipo'] = var_tipo.value
-
-    var_long = current_row[start_col + 3]
-    metadataMap['var_long'] = var_long.value
-
-    var_decimales = current_row[start_col + 4]
-    metadataMap['var_decimales'] = var_decimales.value
-
-    var_desc = current_row[start_col + 5]
-    metadataMap['var_desc'] = var_desc.value
-
-    if var_tipo.value is None or var_name.value is None or var_tipo.value is None or var_long.value is None:
-        return None
-
-    metadataMap['var_name'] = prefix + '_' + metadataMap['var_name']
-
-    return metadataMap
-
-
-def processMetadata(worksheet, start_col, start_row, prefix):
-    metadata = []
-    num_row = 0
-    for current_row in worksheet.iter_rows(min_row=0, max_row=worksheet.max_row):
-        cell = current_row[start_col]
-        if cell is not None and type(cell) is not EmptyCell and len(str(cell.value)) > 0 and num_row > start_row:
-            metadataRow = processMetadataRow(current_row, start_col, prefix)
-            if metadataRow is not None:
-                metadata.append(metadataRow)
-        num_row += 1
-    return metadata
-
-
-def getType(type_name):
-    if type_name == 'Num':
-        return 'NUMERIC'
-    elif type_name == 'Char':
-        return 'CHAR'
-    return 'CHAR'
-
-def getCanonicalName(file_name):
-    offset = file_name.find('_') + 1
-    file_name = file_name[offset:]
-    file_name = file_name[:-4]
-    return file_name
-
 
 def writeLoadData(metadata, original_file_name, annio):
-    # file_name = getCanonicalName(original_file_name)
-    # file_name_def = output_folder + 'load_' + file_name + '.sql'
-    # tablename = 'tbl_' + file_name
-    #
-    # m = re.findall(r'[0-9]{4,7}', original_file_name)
-    # annio = str(m[0])
-    #
-    # if original_file_name.startswith('IRPF20'):
-    #     original_file_name = '10_' + original_file_name
-    #
-    # with open(file_name_def, 'w') as f:
-    #     original_file_name = data_folder + annio + '/' + original_file_name
-    #     f.write('USE ' + database_name + ';\n\n')
-    #     f.write('LOAD DATA LOCAL INFILE \'' + original_file_name + '\'\n')
-    #     f.write('INTO TABLE ' + tablename + ' FIELDS TERMINATED BY \'\';\n')
-
-
-
-    #file_name = getCanonicalName(original_file_name)
     file_name_def = output_folder + str(annio) + '/load_' + original_file_name + '.sql'
     tablename = 'tbl_' + file_name
 
@@ -155,7 +51,7 @@ def writeCreateTable(metadata, original_file_name, annio):
 
         for metadata_item in metadata:
             var_name = metadata_item.get('var_name')
-            var_tipo = getType(metadata_item.get('var_tipo'))
+            var_tipo = util.getType(metadata_item.get('var_tipo'))
             var_long = metadata_item.get('var_long')
             var_decimales = metadata_item.get('var_decimales')
 
@@ -174,37 +70,12 @@ def writeCreateTable(metadata, original_file_name, annio):
         f.write(') engine=columnstore CHARSET=latin1 COLLATE=latin1_spanish_ci;')
 
 
-def getStartColRow(worksheet, file_name):
-    start_col = getStartColumn(worksheet, file_name)
-    if start_col < 0:
-        print('ERROR reading header (start_col): ' + file_name)
-    start_row = getStartRow(worksheet, start_col)
-    if start_row < 0:
-        print('ERROR reading header (start_col): ' + file_name)
 
-    print(' start col:' + str(start_col))
-    print(' start row:' + str(start_row))
-
-    return start_col, start_row
-
-
-def getMetadata(file_name, worksheet, prefix):
-    start_col, start_row = getStartColRow(worksheet, file_name)
+def getMetadata(file_name, worksheet):
+    start_col, start_row = util.getStartColRow(worksheet, file_name)
     if start_col < 0 or start_row < 0:
         return None
-    metadata = processMetadata(worksheet, start_col, start_row, prefix)
-    return metadata
-
-def getRegSize(metadata):
-    size = 0
-    for metadata_item in metadata:
-        size += metadata_item['var_pos_inicial']
-    return size
-
-def updateOffset(metadata, global_offset):
-    for metadata_item in metadata:
-        metadata_item['var_pos_inicial'] = metadata_item['var_pos_inicial'] + global_offset
-
+    metadata = util.processMetadata(worksheet, start_col, start_row)
     return metadata
 
 def getTableNameAndPrefix(title, num_annio):
@@ -262,13 +133,13 @@ for annio in annios:
         if len(file_name) == 0:
             continue
 
-        table_metadata = getMetadata(file_name, worksheet, prefix)
+        table_metadata = getMetadata(file_name, worksheet)
         if table_metadata is None:
             continue
-        table_metadata = updateOffset(table_metadata, global_offset)
+        table_metadata = util.updateOffset(table_metadata, global_offset)
         metadata.extend(table_metadata)
 
-        reg_size = getRegSize(table_metadata)
+        reg_size = util.getRegSize(table_metadata)
         global_offset += reg_size
 
         processed_file_names.append(file_name)
@@ -284,30 +155,30 @@ for annio in annios:
 
 # Contabiliza apariciones de cada variable
 for var in metadata:
-    key=(var['var_name'],var['var_desc'])
+    key = (var['var_name'],var['var_desc'])
     if key in var_comunes:
-        var_comunes[key]['contador']+=1
+        var_comunes[key]['contador'] += 1
     else:
         var_comunes[key]=var
-        var_comunes[key]['contador']=1
+        var_comunes[key]['contador'] = 1
 
 # Imprime las que no son comunes a los n años
 print("VARIABLES QUE NO APARECEN LOS N AÑOS:")
 for key in var_comunes:
     if var_comunes[key]['contador']!=len(annios):
-        print(key,var_comunes[key]['contador'])
+        print(key, var_comunes[key]['contador'])
 print("\n\n")
 
 # Genera consulta SQL para consolidar en una unica tabla los campos comunes a las anuales.
-fields=[]
+fields = []
 for key in var_comunes:
     if var_comunes[key]['contador']==len(annios):
         fields.append(var_comunes[key]['var_name'])
 
-fields=",".join(sorted(fields))
-tablas=[f"tbl_{a}_hogares" for a in annios]
-tablas=" UNION ALL ".join([f"SELECT * FROM {t}" for t in tablas ])
-sql=f"CREATE TABLE tbl_unificado_hogares AS SELECT {fields} FROM ({tablas});"
+fields = ",".join(sorted(fields))
+tablas = [f"tbl_{a}_hogares" for a in annios]
+tablas = " UNION ALL ".join([f"SELECT * FROM {t}" for t in tablas ])
+sql = f"CREATE TABLE tbl_unificado_hogares AS SELECT {fields} FROM ({tablas});"
 
 # Escribe SQL UNION ALL a fichero
 with open("out_unificado/create_global_hogares.sql", 'w') as f:
@@ -317,7 +188,7 @@ with open("out_unificado/create_global_hogares.sql", 'w') as f:
 # ==========================================================
 #                Generar Esquema de Mondrian)
 # ==========================================================
-colores={'M190':'#4469a6','PATRIM':'#0b4d90','RENTA':'#3399ff'}
+colores={'M190': '#4469a6', 'PATRIM': '#0b4d90', 'RENTA': '#3399ff'}
 
 measures=[]
 dimensiones=[]
@@ -331,15 +202,14 @@ foot="""\n\n	</Cube>
 </Schema>"""
 
 for var in metadata:
-    key=(var['var_name'],var['var_desc'])
+    key = (var['var_name'], var['var_desc'])
     if var_comunes[key]['contador']!=len(annios): continue
 
-    v=var_comunes[key]
-    tabla=v['var_name'].split("_")[0]
+    v = var_comunes[key]
+    tabla = v['var_name'].split("_")[0]
 
-    if tabla=='IDEN':
-        #print("EXCLUIDO:"+tabla)
-        dimension=f'''
+    if tabla == 'IDEN':
+        dimension = f'''
 		<Dimension name="{tabla}" caption="{tabla}" description="{tabla}">
 		  <Hierarchy hasAll="false" allMemberName="total">
 			<Level caption="{tabla}" name="{v['var_name']}" column="{v['var_name']}" uniqueMembers="true"  captionColumn="columnName_es">
@@ -357,15 +227,10 @@ for var in metadata:
         '''
         measures.append(measure)
         
-esquema=head+"\n"+"\n".join(dimensiones)+"\n".join(measures)+foot
+esquema = head+"\n"+"\n".join(dimensiones)+"\n".join(measures)+foot
 print(esquema)
 print(dimension)
+
 # Escribe SQL UNION ALL a fichero
 with open("out_unificado/hogares.xml", 'w') as f:
      f.write(esquema+"\n")
-
-
-
-
-
-

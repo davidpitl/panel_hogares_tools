@@ -30,48 +30,24 @@ def getStartRow(worksheet, start_col, start_row):
 
 
 
-def processMetadataRow(current_row, start_col, prefix):
-    #{'var_name': 'IDENPER', 'var_pos_inicial': 1, 'var_tipo': 'Num', 'var_long': 11, 'var_decimales': None, 'var_desc': 'Identificador único de persona'}
-
-    metadataMap = {}
-
-    var_name = current_row[start_col + 1]
-    metadataMap['var_name'] = var_name.value
-
-    var_pos_inicial = current_row[start_col]
-    metadataMap['var_pos_inicial'] = var_pos_inicial.value
-
-    var_tipo = current_row[start_col + 2]
-    metadataMap['var_tipo'] = var_tipo.value
-
-    var_long = current_row[start_col + 3]
-    metadataMap['var_long'] = var_long.value
-
-    var_decimales = current_row[start_col + 4]
-    metadataMap['var_decimales'] = var_decimales.value
-
-    var_desc = current_row[start_col + 5]
-    metadataMap['var_desc'] = var_desc.value
-
-    if var_tipo.value is None or var_name.value is None or var_tipo.value is None or var_long.value is None:
-        return None
-
-    #metadataMap['var_name'] = prefix + '_' + metadataMap['var_name']
-
-    return metadataMap
 
 
-def processMetadata(worksheet, start_col, start_row, prefix):
+
+def processMetadata(worksheet, start_col, start_row):
     metadata = []
     num_row = 0
     for current_row in worksheet.iter_rows(min_row=0, max_row=worksheet.max_row):
         cell = current_row[start_col]
         if cell is not None and type(cell) is not EmptyCell and len(str(cell.value)) > 0 and num_row > start_row:
-            metadataRow = processMetadataRow(current_row, start_col, prefix)
+            metadataRow = processMetadataRow(current_row, start_col)
+
             if metadataRow is not None:
                 metadata.append(metadataRow)
+            else:
+                break
         num_row += 1
     return metadata
+
 
 
 def getType(type_name):
@@ -126,19 +102,7 @@ def getStartColRow(worksheet, file_name):
 
     return start_col, start_row
 
-def processMetadata(worksheet, start_col, start_row):
-    metadata = []
-    num_row = 0
-    for current_row in worksheet.iter_rows(min_row=0, max_row=worksheet.max_row):
-        cell = current_row[start_col]
-        if cell is not None and type(cell) is not EmptyCell and len(str(cell.value)) > 0 and num_row > start_row:
-            metadataRow = processMetadataRow(current_row, start_col)
-            if metadataRow is not None:
-                metadata.append(metadataRow)
-            else:
-                break
-        num_row += 1
-    return metadata
+
 
 def processMetadataRow(current_row, start_col):
     metadataMap = {}
@@ -165,3 +129,45 @@ def processMetadataRow(current_row, start_col):
         return None
 
     return metadataMap
+
+
+
+def getVarComunes(metadata, annios):
+    var_comunes = {}
+    # Contabiliza apariciones de cada variable
+    for var in metadata:
+        key = (var['var_name'], var['var_desc'])
+        if key in var_comunes:
+            var_comunes[key]['contador']+=1
+        else:
+            var_comunes[key] = var
+            var_comunes[key]['contador']=1
+
+    # Imprime las que no son comunes a los n años
+    print("VARIABLES QUE NO APARECEN LOS N AÑOS:")
+    for key in var_comunes:
+        if var_comunes[key]['contador'] != len(annios):
+            print(key,var_comunes[key]['contador'])
+    print("\n\n")
+
+    # Genera consulta SQL para consolidar en una unica tabla los campos comunes a las anuales.
+    fields=[]
+    for key in var_comunes:
+        if var_comunes[key]['contador'] == len(annios):
+            fields.append(var_comunes[key]['var_name'])
+
+    return fields
+
+
+def getRegSize(metadata):
+    size = 0
+    for metadata_item in metadata:
+        size += metadata_item['var_pos_inicial']
+    return size
+
+
+def normalizeName(name):
+    normalized_name = ''
+    normalized_name = name.replace('\n', ' ').replace('\r', '')
+    limit = 40
+    return normalized_name[:limit] + '..' * (len(normalized_name) > limit)

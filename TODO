@@ -1,17 +1,16 @@
 //1. Paste + Load (ProcessExcelMetadataUnificado.py ) Falta acabar el Load
-
-2. Crear SELECT UNION ALL para la carga del cubo unificado
+//2. Crear SELECT UNION ALL para la carga del cubo unificado
 => HECHO (Ricardo & Felix)
 
 3. Generar schemas de Mondrian para los años separados (generados por ProcessExcelMetadata.py)
+//4. Generar schemas de Mondrian para los años separados pasteados (generados por ProcessExcelMetadataUnificado.py)
+//5. Generar schemas de Mondrian para los años unificado (generado por ProcessExcelMetadataUnificado.py)
 
-4. Generar schemas de Mondrian para los años separados pasteados (generados por ProcessExcelMetadataUnificado.py)
-
-5. Generar schemas de Mondrian para los años unificado (generado por ProcessExcelMetadataUnificado.py)
-
-6. Generar cargador de tablas auxiliares (ojo unificación para todos los años y carga indepediente para cada año.
+!6. Generar cargador de tablas auxiliares (ojo unificación para todos los años y carga indepediente para cada año.
 Se puede empezar por la primera) e intriducción de su definición en los schemas.
 
 7. Incluir IDEN general (unificado y no unificado)
 
-8. Util funciones comunes
+//8. Util funciones comunes
+9. Dimensiones jerárquicas
+10. Agrupación en carpetas de las medidas
