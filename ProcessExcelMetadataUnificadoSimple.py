@@ -102,7 +102,7 @@ def writeCreateAsSelect(worksheets, var_comunes):
                     table_names.append('tbl_' + util.getCanonicalName(file_name) + ' as ' + prefix + '_' + str(annio))
                     prefix_names.append(prefix)
 
-            f.write(strSelect[:-2] + '\nFROM tbl_IDEM' + str(annio) + ' as i_' + str(annio) + '\n')
+            f.write(strSelect[:-2] + '\nFROM tbl_IDEN' + str(annio) + ' as i_' + str(annio) + '\n')
 
             cnt = 0
             for table_name in table_names:
