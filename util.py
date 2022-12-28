@@ -1,4 +1,5 @@
 from openpyxl.cell.read_only import EmptyCell
+import html
 
 
 def getStartColumn(worksheet, cell_content):
@@ -29,10 +30,6 @@ def getStartRow(worksheet, start_col, start_row):
     return -1
 
 
-
-
-
-
 def processMetadata(worksheet, start_col, start_row):
     metadata = []
     num_row = 0
@@ -54,11 +51,13 @@ def getType(type_name):
     if type_name == 'Num':
         return 'NUMERIC'
     elif type_name == 'Char':
-        return 'VARCHAR'
-    return 'VARCHAR'
+        return 'CHAR'
+    return 'CHAR'
 
 def getCanonicalName(file_name):
     offset = file_name.find('_') + 1
+    if offset > 2:
+        offset = 0
     file_name = file_name[offset:]
     file_name = file_name[:-4]
     return file_name
@@ -166,8 +165,8 @@ def getRegSize(metadata):
     return size
 
 
-def normalizeName(name):
+def normalizeName(name, limit):
     normalized_name = ''
     normalized_name = name.replace('\n', ' ').replace('\r', '')
-    limit = 40
+    normalized_name = html.escape(normalized_name)
     return normalized_name[:limit] + '..' * (len(normalized_name) > limit)

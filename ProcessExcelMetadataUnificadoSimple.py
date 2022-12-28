@@ -131,9 +131,14 @@ def getAllVarComunes():
 
     var_comunes = util.getVarComunes(metadata, annios)
 
+    #metadata_item['var_name'] for api in common_metadata['var_name'] if api['var_name'] == 'CCAA'
+
+    added_vars = []
     for metadata_item in metadata:
-        if metadata_item.get('var_name') in var_comunes:
+        var_name = metadata_item.get('var_name')
+        if var_name in var_comunes and var_name not in added_vars:
             common_metadata.append(metadata_item)
+            added_vars.append(var_name)
 
     return var_comunes, common_metadata
 
@@ -143,10 +148,12 @@ def createMondrianSchema(var_comunes, metadata):
     measures = []
     dimensiones = []
 
+
     head = """
     <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
-    <Schema name="hogares" measuresCaption="Variables de explotaci&#243;n">
-    <Cube name="anuarioTotal" visible="true" cache="true" enabled="true" caption="Anuario estad&#237;stico">
+    <Schema name="panel_hogares" measuresCaption="Variables de explotaci&#243;n">
+        <Cube name="panel_hogares" visible="true" cache="true" enabled="true" caption="Panel hogares">
+            <Table name = "tbl_unificado_hogares" />
     """
 
     foot = """\n\n	</Cube>
@@ -160,14 +167,14 @@ def createMondrianSchema(var_comunes, metadata):
             descripcion = dimension_names.get(metadata_item['var_name'])
             dimension = f'''
             <Dimension name="{metadata_item['var_name']}" caption="{descripcion}" description="{descripcion}">
-                <Hierarchy hasAll="false" allMemberName="total">
+                <Hierarchy hasAll="true" allMemberName="total">
                     <Level caption="{descripcion}" name="{metadata_item['var_name']}" column="{metadata_item['var_name']}" uniqueMembers="true"/>                    
                 </Hierarchy>
             </Dimension>
             '''
             dimensiones.append(dimension)
         else:
-            descripcion = util.normalizeName(metadata_item['var_desc'])
+            descripcion = util.normalizeName(metadata_item['var_desc'], limit = 50)
             measure = f'''\t\t<Measure name="{metadata_item['var_name']}"  column="{metadata_item['var_name']}"  formatString="#,###;-#,###;0" aggregator="sum" caption="{metadata_item['var_name']}" description="{descripcion}"/>'''
             # TODO decimals
             measures.append(measure)

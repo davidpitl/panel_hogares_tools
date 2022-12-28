@@ -4,6 +4,10 @@ import os
 import re
 import util
 
+unsigned_integer_vars_list = ['IDENPER', 'IDENPER', 'IDENHOG', 'IDENPERS_CONY']
+
+
+
 
 iden_file_names  = ['1_IDEN2016.txt', '1_IDEN2017.txt', '1_IDEN2018.txt', '1_IDEN2019.txt']
 renta_file_names = ['2_Renta2016.txt', '2_Renta2017.txt', '2_Renta2018.txt', '2_Renta2019.txt']
@@ -109,16 +113,25 @@ def writeCreateTable(metadata, original_file_name):
             var_decimales = metadata_item.get('var_decimales')
 
             strLength = ''
+            strSign = ''
             if var_decimales is not None and var_tipo == 'NUMERIC':
+                if var_name.upper() not in unsigned_integer_vars_list:
+                    if var_decimales > 0 and var_long > 3:
+                        var_long -= 2   # sign and decimal separator space
+                    else:
+                        var_long -= 1   # sign space
+                else:
+                    strSign = 'UNSIGNED'
                 strLength = str(var_long) + ',' + str(var_decimales)
             else:
                 strLength = str(var_long)
+                if var_tipo == 'NUMERIC':
+                    strSign = 'UNSIGNED'
 
             if metadata_item == metadata[-1]:
-                f.write('\t' + var_name + ' ' + var_tipo + '(' + strLength + ') DEFAULT NULL\n')
-                # TODO var_desc
+                f.write('\t' + var_name + ' ' + var_tipo + '(' + strLength + ') ' + strSign +' DEFAULT NULL\n')
             else:
-                f.write('\t' + var_name + ' ' + var_tipo + '(' + strLength + ') DEFAULT NULL,\n')
+                f.write('\t' + var_name + ' ' + var_tipo + '(' + strLength + ') ' + strSign +' DEFAULT NULL,\n')
 
         f.write(') engine=columnstore CHARSET=latin1 COLLATE=latin1_spanish_ci;')
 
