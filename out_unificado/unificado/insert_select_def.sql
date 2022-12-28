@@ -1,7 +1,6 @@
 USE panel_hogares2;
 
-CREATE TABLE tbl_unificado_hogares 
-AS 
+INSERT INTO tbl_unificado_hogares
 SELECT
 	2016,
 	i_2016.IDENPER,

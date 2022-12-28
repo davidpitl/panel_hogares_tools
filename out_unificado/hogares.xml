@@ -1,23 +1,44 @@
-
+<!--
+    ANNO
+	i_2017.IDENPER,
+	i_2017.IDENHOG,
+		i_2017.CCAA,
+		i_2017.CPRO,
+		i_2017.CMUN,
+	i_2017.SECCION,
+	i_2017.TIPOHOG,
+	i_2017.TRAMO,
+	i_2017.FACTORCAL,
+	i_2017.FACTORCALNACI,
+	i_2017.FACTORDIS,
+	i_2017.FACTORDISNACI,
+	i_2017.NACIO,
+	i_2017.TIPCONTRIB,
+	i_2017.IDENPERS_CONY,
+-->
     <?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
     <Schema name="panel_hogares" measuresCaption="Variables de explotaci&#243;n">
         <Cube name="panel_hogares" visible="true" cache="true" enabled="true" caption="Panel hogares">
             <Table name = "tbl_unificado_hogares" />
-    
-            <Dimension name="CCAA" caption="Comunidad autónoma" description="Comunidad autónoma">
-                <Hierarchy hasAll="true" allMemberName="total">
-                    <Level caption="Comunidad autónoma" name="CCAA" column="CCAA" uniqueMembers="true"/>                    
-                </Hierarchy>
-            </Dimension>
-            
 
-            <Dimension name="CPRO" caption="Provincia" description="Provincia">
-                <Hierarchy hasAll="true" allMemberName="total">
-                    <Level caption="Provincia" name="CPRO" column="CPRO" uniqueMembers="true"/>                    
-                </Hierarchy>
-            </Dimension>
-            
 
+
+			<Dimension name="DG" caption="Distribución Geográfica" foreignKey="CPRO">
+				<Hierarchy caption="Distribución Geográfica" hasAll="true" allMemberName="Total" primaryKey="IDPROV">
+					<Table name="tbl_aux_provicia"/>
+					<Level name="CCAA" column="IDCCAA" caption="CCAA" captionColumn="CCAA"/>
+					<Level name="Provincias" column="IDPROV" caption="Provincias" captionColumn="PROV"/>
+				</Hierarchy>
+			</Dimension>
+<!--
+        <Dimension name="tramoBIs" caption="Tramo de Base Imponible" foreignKey="tramoBIs">
+            <Hierarchy name="tramoBIs" caption="Tramo" hasAll="true" allMemberName="Total" primaryKey="id">
+                <Table name="tblauxtramoBIsb"/>
+                <Level name="tramoBIs" column="nombre" ordinalColumn="orden" caption="Tramo"/>
+            </Hierarchy>
+        </Dimension>
+-->
+<!--
             <Dimension name="CMUN" caption="Municipio" description="Municipio">
                 <Hierarchy hasAll="true" allMemberName="total">
                     <Level caption="Municipio" name="CMUN" column="CMUN" uniqueMembers="true"/>                    
@@ -93,7 +114,8 @@
                     <Level caption="Sección censal" name="SECCION" column="SECCION" uniqueMembers="true"/>                    
                 </Hierarchy>
             </Dimension>
-            		<Measure name="M11"  column="M11"  formatString="#,###;-#,###;0" aggregator="sum" caption="M11" description="Salarios"/>
+-->
+        <Measure name="M11"  column="M11"  formatString="#,###;-#,###;0" aggregator="sum" caption="M11" description="Salarios"/>
 		<Measure name="M12"  column="M12"  formatString="#,###;-#,###;0" aggregator="sum" caption="M12" description="Pensiones de jubilación"/>
 		<Measure name="M13"  column="M13"  formatString="#,###;-#,###;0" aggregator="sum" caption="M13" description="Prestaciones por desempleo sujetas"/>
 		<Measure name="M14"  column="M14"  formatString="#,###;-#,###;0" aggregator="sum" caption="M14" description="Aportación del empleador a planes de pensiones y s.."/>

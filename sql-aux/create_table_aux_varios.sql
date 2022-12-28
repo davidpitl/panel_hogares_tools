@@ -18,22 +18,22 @@ CREATE TABLE tbl_aux_tipohogar(
 	TIPOHOG CHAR(50) DEFAULT NULL
 ) engine=columnstore CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('1','Hogar con un mayor de edad');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('1.1','Hogar unipersonal');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('1.1.1','Menor de 65 años');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('1.1.2','Mayor de 65 años');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('1.2','Hogar con más de una persona');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('2','Hogar con más de un mayor de edad');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('2.1','Algún miembro menor de 18 años');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('2.1.1','Hogar con un menor');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('2.1.2','Hogar con dos menores');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('2.1.3','Hogar con tres o más menores');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('2.2','Algún miembro mayor de 65 años (sin menores)');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('2.2.1','Hogar de dos miembros');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('2.2.2','Hogar de más de dos miembros');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('2.3','Otros');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('2.3.1','Hogar de dos miembros');
-INSERT INTO tbl_aux_sexo (IDTIPOHOG, TIPOHOG) VALUES ('2.3.2','Hogar de más de dos miembros');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('1','Hogar con un mayor de edad');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('1.1','Hogar unipersonal');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('1.1.1','Menor de 65 años');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('1.1.2','Mayor de 65 años');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('1.2','Hogar con más de una persona');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2','Hogar con más de un mayor de edad');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.1','Algún miembro menor de 18 años');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.1.1','Hogar con un menor');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.1.2','Hogar con dos menores');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.1.3','Hogar con tres o más menores');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.2','Algún miembro mayor de 65 años (sin menores)');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.2.1','Hogar de dos miembros');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.2.2','Hogar de más de dos miembros');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.3','Otros');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.3.1','Hogar de dos miembros');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.3.2','Hogar de más de dos miembros');
 
 
 # TRAMO RENTA
@@ -88,10 +88,10 @@ CREATE TABLE tbl_aux_estadocivil(
 	ESTCV CHAR(40) DEFAULT NULL
 ) engine=columnstore CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
-INSERT INTO tbl_aux_estadocivil (IDTIPCONTRIB, TIPCONTRIB) VALUES (1,'Soltero');
-INSERT INTO tbl_aux_estadocivil (IDTIPCONTRIB, TIPCONTRIB) VALUES (2,'Casado');
-INSERT INTO tbl_aux_estadocivil (IDTIPCONTRIB, TIPCONTRIB) VALUES (3,'Viudo');
-INSERT INTO tbl_aux_estadocivil (IDTIPCONTRIB, TIPCONTRIB) VALUES (4,'Divorciado o separado legalmente');
+INSERT INTO tbl_aux_estadocivil (IDESTCV, ESTCV) VALUES (1,'Soltero');
+INSERT INTO tbl_aux_estadocivil (IDESTCV, ESTCV) VALUES (2,'Casado');
+INSERT INTO tbl_aux_estadocivil (IDESTCV, ESTCV) VALUES (3,'Viudo');
+INSERT INTO tbl_aux_estadocivil (IDESTCV, ESTCV) VALUES (4,'Divorciado o separado legalmente');
 
 
 # SEXODEC Sexo del declarante
@@ -113,8 +113,8 @@ CREATE TABLE tbl_aux_tipotributacion(
 	TIPOTRIB CHAR(20) DEFAULT NULL
 ) engine=columnstore CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
-INSERT INTO tbl_aux_tipotributacion (IDTIPCONTRIB, TIPCONTRIB) VALUES ('I','Individual');
-INSERT INTO tbl_aux_tipotributacion (IDTIPCONTRIB, TIPCONTRIB) VALUES ('C','Conjunta');
+INSERT INTO tbl_aux_tipotributacion (IDTIPOTRIB, TIPOTRIB) VALUES ('I','Individual');
+INSERT INTO tbl_aux_tipotributacion (IDTIPOTRIB, TIPOTRIB) VALUES ('C','Conjunta');
 
 
 # MINUSD Grado de minusvalía
@@ -124,10 +124,10 @@ CREATE TABLE tbl_aux_gradominusvalia(
 	MINUSD CHAR(70) DEFAULT NULL
 ) engine=columnstore CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
-INSERT INTO tbl_aux_gradominusvalia (IDTIPCONTRIB, TIPCONTRIB) VALUES ('000','Sin minusvalía');
-INSERT INTO tbl_aux_gradominusvalia (IDTIPCONTRIB, TIPCONTRIB) VALUES ('001','Minusvalía > 33% y < 65%');
-INSERT INTO tbl_aux_gradominusvalia (IDTIPCONTRIB, TIPCONTRIB) VALUES ('002','Minusvalía > 33% y < 65% con movilidad reducida');
-INSERT INTO tbl_aux_gradominusvalia (IDTIPCONTRIB, TIPCONTRIB) VALUES ('003','Minusvalía > 65%');
-INSERT INTO tbl_aux_gradominusvalia (IDTIPCONTRIB, TIPCONTRIB) VALUES ('004','Incapacitación judicial por sentencia de la jurisdicción civil');
+INSERT INTO tbl_aux_gradominusvalia (IDMINUSD, MINUSD) VALUES ('000','Sin minusvalía');
+INSERT INTO tbl_aux_gradominusvalia (IDMINUSD, MINUSD) VALUES ('001','Minusvalía > 33% y < 65%');
+INSERT INTO tbl_aux_gradominusvalia (IDMINUSD, MINUSD) VALUES ('002','Minusvalía > 33% y < 65% con movilidad reducida');
+INSERT INTO tbl_aux_gradominusvalia (IDMINUSD, MINUSD) VALUES ('003','Minusvalía > 65%');
+INSERT INTO tbl_aux_gradominusvalia (IDMINUSD, MINUSD) VALUES ('004','Incapacitación judicial por sentencia de la jurisdicción civil');
 
 
