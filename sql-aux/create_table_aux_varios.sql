@@ -15,25 +15,29 @@ INSERT INTO tbl_aux_sexo (IDSEXO, SEXO) VALUES (6,'Mujer');
 DROP TABLE IF EXISTS tbl_aux_tipohogar;
 CREATE TABLE tbl_aux_tipohogar(
 	IDTIPOHOG CHAR(5) DEFAULT NULL,
-	TIPOHOG CHAR(50) DEFAULT NULL
+	TIPOHOG_LEVEL1 CHAR(50) DEFAULT NULL,
+	TIPOHOG_LEVEL2 CHAR(50) DEFAULT NULL,
+	TIPOHOG_LEVEL3 CHAR(50) DEFAULT NULL
 ) engine=columnstore CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('1','Hogar con un mayor de edad');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('1.1','Hogar unipersonal');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('1.1.1','Menor de 65 años');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('1.1.2','Mayor de 65 años');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('1.2','Hogar con más de una persona');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2','Hogar con más de un mayor de edad');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.1','Algún miembro menor de 18 años');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.1.1','Hogar con un menor');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.1.2','Hogar con dos menores');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.1.3','Hogar con tres o más menores');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.2','Algún miembro mayor de 65 años (sin menores)');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.2.1','Hogar de dos miembros');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.2.2','Hogar de más de dos miembros');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.3','Otros');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.3.1','Hogar de dos miembros');
-INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG) VALUES ('2.3.2','Hogar de más de dos miembros');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('1',    'Hogar con un mayor de edad','','');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('1.1',  'Hogar con un mayor de edad','Hogar unipersonal','');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('1.1.1','Hogar con un mayor de edad','Hogar unipersonal','Menor de 65 años');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('1.1.2','Hogar con un mayor de edad','Hogar unipersonal','Mayor de 65 años');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('1.2',  'Hogar con un mayor de edad','Hogar con más de una persona','');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('2',    'Hogar con más de un mayor de edad','','');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('2.1',  'Hogar con más de un mayor de edad','Algún miembro menor de 18 años','');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('2.1.1','Hogar con más de un mayor de edad','Algún miembro menor de 18 años','Hogar con un menor');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('2.1.2','Hogar con más de un mayor de edad','Algún miembro menor de 18 años','Hogar con dos menores');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('2.1.3','Hogar con más de un mayor de edad','Algún miembro menor de 18 años','Hogar con tres o más menores');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('2.2',  'Hogar con más de un mayor de edad','Algún miembro mayor de 65 años (sin menores)','');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('2.2.1','Hogar con más de un mayor de edad','Algún miembro mayor de 65 años (sin menores)','Hogar de dos miembros');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('2.2.2','Hogar con más de un mayor de edad','Algún miembro mayor de 65 años (sin menores)','Hogar de más de dos miembros');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('2.3',  'Hogar con más de un mayor de edad','Otros','');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('2.3.1','Hogar con más de un mayor de edad','Otros','Hogar de dos miembros');
+INSERT INTO tbl_aux_tipohogar (IDTIPOHOG, TIPOHOG_LEVEL1, TIPOHOG_LEVEL2, TIPOHOG_LEVEL3) VALUES ('2.3.2','Hogar con más de un mayor de edad','Otros','Hogar de más de dos miembros');
+
+
 
 
 # TRAMO RENTA
@@ -61,12 +65,13 @@ CREATE TABLE tbl_aux_tipocontribucion(
 	TIPCONTRIB CHAR(30) DEFAULT NULL
 ) engine=columnstore CHARSET=latin1 COLLATE=latin1_spanish_ci;
 
-INSERT INTO tbl_aux_tipocontribucion (IDTIPCONTRIB, TIPCONTRIB) VALUES ('','Sin información');
+INSERT INTO tbl_aux_tipocontribucion (IDTIPCONTRIB, TIPCONTRIB) VALUES (NULL,'Sin información');
 INSERT INTO tbl_aux_tipocontribucion (IDTIPCONTRIB, TIPCONTRIB) VALUES ('I','Individual');
 INSERT INTO tbl_aux_tipocontribucion (IDTIPCONTRIB, TIPCONTRIB) VALUES ('CC','Conjunta casados');
 INSERT INTO tbl_aux_tipocontribucion (IDTIPCONTRIB, TIPCONTRIB) VALUES ('CM','Conjunta monoparental');
 INSERT INTO tbl_aux_tipocontribucion (IDTIPCONTRIB, TIPCONTRIB) VALUES ('ND','No declarante');
 INSERT INTO tbl_aux_tipocontribucion (IDTIPCONTRIB, TIPCONTRIB) VALUES ('NR','No residente');
+
 
 
 # TIPODEC Número de declarante

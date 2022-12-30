@@ -2,30 +2,62 @@
     <Schema name="panel_hogares" measuresCaption="Variables de explotaci&#243;n">
         <Cube name="panel_hogares" visible="true" cache="true" enabled="true" caption="Panel hogares">
             <Table name = "tbl_unificado_hogares" />
+            
+		<Dimension foreignKey="ANNO" capcion="A&#241;o" name="A&#241;o">
+			<Hierarchy hasAll="false">
+				<Level column="ANNO" name="A&#241;o" ordinalColumn="ANNO" uniqueMembers="true"/>
+			</Hierarchy>
+		</Dimension>
 
 		<Dimension name="DG" caption="Distribuci&#243;n Geogr&#225;fica" foreignKey="CPRO">
 			<Hierarchy caption="Distribuci&#243;n Geogr&#225;fica" hasAll="true" allMemberName="Total" primaryKey="IDPROV">
 				<Table name="tbl_aux_provicia"/>
-				<Level name="CCAA" column="IDCCAA" caption="CCAA" captionColumn="CCAA"/>
-				<Level name="Provincias" column="IDPROV" caption="Provincias" captionColumn="PROV"/>
+				<Level name="CCAA" column="IDCCAA" caption="CCAA" captionColumn="CCAA" ordinalColumn="IDCCAA"/>
+				<Level name="Provincias" column="IDPROV" caption="Provincias" captionColumn="PROV" ordinalColumn="IDPROV"/>
 			</Hierarchy>
 		</Dimension>
 
-		<Dimension name="TH" caption="Tipo de hogar" foreignKey="TIPOHOG">
+		<Dimension name="TIPOHOG" caption="Tipo de hogar" foreignKey="TIPOHOG">
 			<Hierarchy caption="Tipo de hogar" hasAll="true" allMemberName="Total" primaryKey="IDTIPOHOG">
 				<Table name="tbl_aux_tipohogar"/>
-				<Level name="TIPOHOG" column="TIPOHOG" caption="TIPOHOG" captionColumn="TIPOHOG"/>
+				<Level name="Nivel 1" column="TIPOHOG_LEVEL1" caption="Nivel 1" captionColumn="TIPOHOG_LEVEL1"/>
+				<Level name="Nivel 2" column="TIPOHOG_LEVEL2" caption="Nivel 2" captionColumn="TIPOHOG_LEVEL2"/>
+				<Level name="Nivel 3" column="TIPOHOG_LEVEL3" caption="Nivel 3" captionColumn="TIPOHOG_LEVEL3"/>
 			</Hierarchy>
 		</Dimension>
 
-		<Dimension name="TH" caption="Tipo de hogar" foreignKey="NACIO">
-			<Hierarchy caption="Tipo de hogar" hasAll="true" allMemberName="Total" primaryKey="IDTIPOHOG">
-				<Table name="tbl_aux_tipohogar"/>
-				<Level name="TIPOHOG" column="TIPOHOG" caption="TIPOHOG" captionColumn="TIPOHOG"/>
+		<Dimension name="NACIO" caption="Nacionalidad" foreignKey="NACIO">
+			<Hierarchy caption="Nacionalidad stat" hasAll="true" allMemberName="Total" primaryKey="IDTERRITORIOS">
+				<Table name="tbl_aux_paises"/>
+				<Level name="CONTINENTE" column="CONTINENTE" caption="Continente" captionColumn="CONTINENTE" ordinalColumn="IDCONTINENTE"/>
+				<Level name="AGREGACIONESPAISES" column="AGREGACIONESPAISES" caption="AGREGACIONESPAISES" captionColumn="AGREGACIONESPAISES" ordinalColumn="IDAGREGACIONESPAISES"/>
+				<Level name="TERRITORIOS" column="TERRITORIOS" caption="Territorio" captionColumn="TERRITORIOS" ordinalColumn="IDTERRITORIOS"/>
+			</Hierarchy>
+			
+			<Hierarchy caption="Nacionalidad stat" hasAll="true" allMemberName="Total" primaryKey="IDCORRESPONDENCIAESTADISTICAPAISES">
+				<Table name="tbl_aux_paises"/>
+				<Level name="CONTINENTE" column="CONTINENTE" caption="Continente" captionColumn="CONTINENTE" ordinalColumn="IDCONTINENTE"/>
+				<Level name="AGREGACIONESPAISES" column="AGREGACIONESPAISES" caption="AGREGACIONESPAISES" captionColumn="AGREGACIONESPAISES" ordinalColumn="IDAGREGACIONESPAISES"/>
+				<Level name="CORRESPONDENCIAESTADISTICAPAISES" column="CORRESPONDENCIAESTADISTICAPAISES" caption="Territorio" captionColumn="CORRESPONDENCIAESTADISTICAPAISES" ordinalColumn="IDCORRESPONDENCIAESTADISTICAPAISES"/>
+			</Hierarchy>
+		</Dimension>		
+		
+		<Dimension name="TIPCONTRIB" caption="Tipo de contribuyente" foreignKey="TIPCONTRIB">
+			<Hierarchy caption="Tipo de contribuyente" hasAll="true" allMemberName="Total" primaryKey="IDTIPCONTRIB">
+				<Table name="tbl_aux_tipocontribucion"/>
+				<Level name="Contribuyente1" column="TIPCONTRIB" caption="Contribuyente" captionColumn="TIPCONTRIB" ordinalColumn="IDTIPCONTRIB"/>
 			</Hierarchy>
 		</Dimension>
+		
+		<Dimension name="TRAMO" caption="Tramo de renta" foreignKey="TRAMO">
+			<Hierarchy caption="Tramo de renta" hasAll="true" allMemberName="Total" primaryKey="IDTRAMORENTA">
+				<Table name="tbl_aux_tramorenta"/>
+				<Level name="Tramo" column="TRAMORENTA" caption="Tramo" captionColumn="TRAMORENTA" ordinalColumn="IDTRAMORENTA"/>
+			</Hierarchy>
+		</Dimension>
+		
 
-		<Measure name="M11"  column="M11"  formatString="#,###;-#,###;0" aggregator="sum" caption="M11" description="Salarios"/>
+        	<Measure name="M11"  column="M11"  formatString="#,###;-#,###;0" aggregator="sum" caption="M11" description="Salarios"/>
 		<Measure name="M12"  column="M12"  formatString="#,###;-#,###;0" aggregator="sum" caption="M12" description="Pensiones de jubilaci&#243;n"/>
 		<Measure name="M13"  column="M13"  formatString="#,###;-#,###;0" aggregator="sum" caption="M13" description="Prestaciones por desempleo sujetas"/>
 		<Measure name="M14"  column="M14"  formatString="#,###;-#,###;0" aggregator="sum" caption="M14" description="Aportaci&#243;n del empleador a planes de pensiones y s.."/>
